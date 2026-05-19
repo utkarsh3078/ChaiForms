@@ -30,23 +30,23 @@ class UserService {
     const hash = createHmac("sha256", salt).update(password).digest("hex");
 
     //Insert the user in the database and return the user id
-    const userInserResult = await db
+    const userInsertResult = await db
       .insert(usersTable)
       .values({ email, fullName, salt, password: hash })
       .returning({
         id: usersTable.id,
       });
 
-    if (!userInserResult || userInserResult.length === 0)
+    if (!userInsertResult || userInsertResult.length === 0 || !userInsertResult[0]?.id)
       throw new Error("Something went wrong while creating the user");
 
     //Return the user id and in {} so that we can add more fields in the future if needed without breaking the existing code
     return {
-      id: userInserResult[0]?.id,
+      id: userInsertResult[0].id,
     };
   }
 
-  //
+  // extra code
 
   public async getAuthenticationMethods(): Promise<
     ReadonlyArray<GetAuthenticationMethodOutputSchema>

@@ -1,16 +1,25 @@
-import express from "express";
+import express, { type RequestHandler } from "express";
 import { logger } from "@repo/logger";
 import cors from "cors";
 
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { generateOpenApiDocument, createOpenApiExpressMiddleware } from "trpc-to-openapi";
-import { apiReference } from "@scalar/express-api-reference";
 
 import { serverRouter, createContext } from "@repo/trpc/server";
 
-import { env } from "./env";
+import { env } from "./env.js";
 
 export const app = express();
+let apiReferenceHandlerPromise: Promise<RequestHandler> | undefined;
+
+function getApiReferenceHandler() {
+  apiReferenceHandlerPromise ??= import("@scalar/express-api-reference").then(({ apiReference }) =>
+    apiReference({ url: "/openapi.json" }),
+  );
+
+  return apiReferenceHandlerPromise;
+}
+
 const openApiDocument = generateOpenApiDocument(serverRouter, {
   title: "Streamyst OpenAPI",
   version: "1.0.0",
@@ -20,7 +29,8 @@ const openApiDocument = generateOpenApiDocument(serverRouter, {
 if (env.NODE_ENV !== "prod") {
   app.use(
     cors({
-      origin: "*",
+      origin: env.CLIENT_URL,
+      credentials: true,
     }),
   );
 }
@@ -41,7 +51,14 @@ app.get("/openapi.json", (req, res) => {
 });
 
 logger.debug(`docs: ${env.BASE_URL}/docs`);
-app.use("/docs", apiReference({ url: "/openapi.json" }));
+app.use("/docs", async (req, res, next) => {
+  try {
+    const apiReferenceHandler = await getApiReferenceHandler();
+    apiReferenceHandler(req, res, next);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.use(
   "/api",

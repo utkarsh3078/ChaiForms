@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { useForm } from "react-hook-form";
+import { trpc } from "~/trpc/client";
 
 type SignupFormValues = {
   name: string;
@@ -14,10 +15,19 @@ type SignupFormValues = {
 };
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const { mutateAsync: createUserWithEmailAndPasswordAsync } =
+    trpc.auth.createUserWithEmailAndPassword.useMutation();
   const { register, handleSubmit } = useForm<SignupFormValues>();
 
-  const onSubmit = (values: SignupFormValues) => {
+  //handler function for form submission
+  const onSubmit = async (values: SignupFormValues) => {
     console.log(values);
+    const { id } = await createUserWithEmailAndPasswordAsync({
+      email: values.email,
+      password: values.password,
+      fullName: values.name,
+    });
+    console.log(`User created with ID: ${id}`);
   };
 
   return (
