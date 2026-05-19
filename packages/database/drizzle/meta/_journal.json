@@ -8,6 +8,13 @@
       "when": 1779106758657,
       "tag": "0000_clear_beast",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779175699819,
+      "tag": "0001_typical_susan_delgado",
+      "breakpoints": true
     }
   ]
 }
