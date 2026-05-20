@@ -19,3 +19,9 @@ export const getAuthenticationMethodOutputSchema = z.object({
 export type GetAuthenticationMethodOutputSchema = z.infer<
   typeof getAuthenticationMethodOutputSchema
 >;
+
+//token model
+export const generateUserTokenPayload = z.object({
+  id: z.string().describe("User id"),
+});
+export type GenerateUserTokenPayloadType = z.infer<typeof generateUserTokenPayload>;

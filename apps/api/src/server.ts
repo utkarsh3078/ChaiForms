@@ -4,7 +4,7 @@ import cors from "cors";
 
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { generateOpenApiDocument, createOpenApiExpressMiddleware } from "trpc-to-openapi";
-
+import cookieParser from "cookie-parser";
 import { serverRouter, createContext } from "@repo/trpc/server";
 
 import { env } from "./env.js";
@@ -35,6 +35,7 @@ if (env.NODE_ENV !== "prod") {
   );
 }
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req, res) => {
