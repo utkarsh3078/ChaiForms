@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+//signup model
 export const createUserWithEmailAndPasswordInput = z.object({
   fullName: z.string().describe("Full name of the user"),
   email: z.string().describe("Email of the user"),
@@ -8,6 +9,15 @@ export const createUserWithEmailAndPasswordInput = z.object({
 
 export type CreateUserWithEmailAndPasswordInputType = z.infer<
   typeof createUserWithEmailAndPasswordInput
+>;
+
+//signin model
+export const signInUserWithEmailAndPasswordOutput = z.object({
+  email: z.string().describe("Email of the user"),
+  password: z.string().describe("password of the user"),
+});
+export type SignInUserWithEmailAndPasswordOutputType = z.infer<
+  typeof signInUserWithEmailAndPasswordOutput
 >;
 
 export const getAuthenticationMethodOutputSchema = z.object({
@@ -19,6 +29,12 @@ export const getAuthenticationMethodOutputSchema = z.object({
 export type GetAuthenticationMethodOutputSchema = z.infer<
   typeof getAuthenticationMethodOutputSchema
 >;
+
+export const signInWithEmailAndPasswordInput = z.object({
+  email: z.string().describe("Email of the user"),
+  password: z.string().describe("Password of the user"),
+});
+export type SignInWithEmailAndPasswordInputType = z.infer<typeof signInWithEmailAndPasswordInput>;
 
 //token model
 export const generateUserTokenPayload = z.object({

@@ -6,11 +6,13 @@ import {
   GenerateUserTokenPayloadType,
   createUserWithEmailAndPasswordInput,
   generateUserTokenPayload,
+  SignInWithEmailAndPasswordInputType,
+  signInWithEmailAndPasswordInput,
 } from "./model";
 import { env } from "../env";
 import { googleOAuth2Client } from "../clients/google-oauth";
 import { GetAuthenticationMethodOutputSchema } from "./model";
-import JWT from "jsonwebtoken";
+import * as JWT from "jsonwebtoken";
 
 class UserService {
   private async getUsersByEmail(email: string) {
@@ -25,6 +27,11 @@ class UserService {
     return { token };
   }
 
+  private async generateHash(salt: string, password: string) {
+    const hash = createHmac("sha256", salt).update(password).digest("hex");
+    return hash;
+  }
+
   public async createUserWithEmailAndPassword(payload: CreateUserWithEmailAndPasswordInputType) {
     const { fullName, email, password } =
       await createUserWithEmailAndPasswordInput.parseAsync(payload);
@@ -36,7 +43,7 @@ class UserService {
 
     //Generate salt and hash the password
     const salt = randomBytes(16).toString("hex");
-    const hash = createHmac("sha256", salt).update(password).digest("hex");
+    const hash = await this.generateHash(salt, password);
 
     //Insert the user in the database and return the user id
     const userInsertResult = await db
@@ -54,6 +61,23 @@ class UserService {
     //Return the user id and in {} so that we can add more fields in the future if needed without breaking the existing code
     return {
       id: userId,
+      token,
+    };
+  }
+  public async signInWithEmailAndPassword(payload: SignInWithEmailAndPasswordInputType) {
+    const { email, password } = await signInWithEmailAndPasswordInput.parseAsync(payload);
+    const existingUser = await this.getUsersByEmail(email);
+
+    if (!existingUser) throw new Error(`user with email: ${email} does not exist pls sign up`);
+
+    if (!existingUser.salt || !existingUser.password)
+      throw new Error("Invalid authentication method");
+
+    const hash = await this.generateHash(existingUser.salt, password);
+    if (hash !== existingUser.password) throw new Error("email or password is incorrect");
+    const { token } = await this.generateUserToken({ id: existingUser.id });
+    return {
+      id: existingUser.id,
       token,
     };
   }
