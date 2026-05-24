@@ -1,35 +1,39 @@
-import { cn } from "~/lib/utils"
-import { Button } from "~/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "~/components/ui/field"
-import { Input } from "~/components/ui/input"
+"use client";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "~/components/ui/field";
+import { Input } from "~/components/ui/input";
+import { useForm } from "react-hook-form";
+import { useSignIn } from "~/hooks/api/auth/index";
+
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
+export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+  const { signInUserWithEmailAndPasswordAsync } = useSignIn();
+  const { register, handleSubmit } = useForm<LoginFormValues>();
+
+  const onSubmit = async (values: LoginFormValues) => {
+    console.log(values);
+    const { id } = await signInUserWithEmailAndPasswordAsync({
+      email: values.email,
+      password: values.password,
+    });
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -38,6 +42,7 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  {...register("email")}
                 />
               </Field>
               <Field>
@@ -50,7 +55,7 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required {...register("password")} />
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
@@ -66,5 +71,5 @@ export function LoginForm({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
