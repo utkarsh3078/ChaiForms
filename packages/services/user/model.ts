@@ -30,6 +30,7 @@ export type GetAuthenticationMethodOutputSchema = z.infer<
   typeof getAuthenticationMethodOutputSchema
 >;
 
+//Login model
 export const signInWithEmailAndPasswordInput = z.object({
   email: z.string().describe("Email of the user"),
   password: z.string().describe("Password of the user"),
