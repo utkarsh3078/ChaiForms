@@ -2,6 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 import { AppSidebar } from "~/components/app-sidebar";
 import { SiteHeader } from "~/components/site-header";
@@ -19,7 +20,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { Textarea } from "~/components/ui/textarea";
-import { useCreateForm } from "~/hooks/api/form";
+import { useCreateForm, useListForms } from "~/hooks/api/form";
 
 type CreateFormValues = {
   title: string;
@@ -30,6 +31,7 @@ type CreateFormValues = {
 
 export default function FormsPage() {
   const [open, setOpen] = useState(false);
+  const { forms, isLoading: isFormsLoading, error: formsError } = useListForms();
   const { createFormAsync, error, status } = useCreateForm();
   const {
     register,
@@ -183,9 +185,48 @@ export default function FormsPage() {
               </Dialog>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Create a new form from the button above and send it directly to the form service.
-              </p>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Create a new form from the button above and open any form to continue building it.
+                </p>
+
+                {formsError ? (
+                  <p className="text-sm text-destructive">{formsError.message}</p>
+                ) : null}
+
+                {isFormsLoading ? (
+                  <p className="text-sm text-muted-foreground">Loading forms...</p>
+                ) : forms && forms.length > 0 ? (
+                  <div className="grid gap-3">
+                    {forms.map((form) => (
+                      <Card key={form.id} className="border-dashed">
+                        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="space-y-1">
+                            <h3 className="font-medium leading-none">{form.title}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {form.description ?? "No description provided"}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Created{" "}
+                              {form.createdAt
+                                ? new Date(form.createdAt).toLocaleString()
+                                : "just now"}
+                            </p>
+                          </div>
+
+                          <Button asChild variant="outline">
+                            <Link href={`/dashboard/forms/${form.id}`}>See form</Link>
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
+                    No forms yet. Create your first one to start building.
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
