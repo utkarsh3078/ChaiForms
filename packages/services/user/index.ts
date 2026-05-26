@@ -1,12 +1,14 @@
+//Buisness logic related to the user will be implemented in this file, and it will be used by the API routes in the api folder. It will also be used by other services if needed. It will also handle the authentication and authorization of the user. It will also handle the token generation and verification. It will also handle the password hashing and verification. It will also handle the user creation and sign in with email and password. It will also handle the user information retrieval by id. It will also handle the supported authentication methods retrieval.
+
 import { db, eq } from "@repo/database";
-import { usersTable } from "@repo/database/models/user";
+import { usersTable } from "@repo/database/models/user"; //schema of the user table in the database
 import { randomBytes, createHmac } from "node:crypto";
 import {
   type CreateUserWithEmailAndPasswordInputType,
-  GenerateUserTokenPayloadType,
+  type GenerateUserTokenPayloadType,
   createUserWithEmailAndPasswordInput,
   generateUserTokenPayload,
-  SignInWithEmailAndPasswordInputType,
+  type SignInWithEmailAndPasswordInputType,
   signInWithEmailAndPasswordInput,
 } from "./model";
 import { env } from "../env";
@@ -17,6 +19,7 @@ import * as JWT from "jsonwebtoken";
 class UserService {
   private async getUsersByEmail(email: string) {
     const result = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    // As drizzle returns an array of results, we need to check if the array is empty or not before returning the first element
     if (!result || result.length === 0) return null;
     return result[0];
   }

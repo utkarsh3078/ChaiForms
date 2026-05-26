@@ -1,3 +1,5 @@
+//Write Procedures for authentication related operations like sign up, sign in, sign out etc. in this file. These procedures will be used in the trpc router for authentication.
+
 import { userService } from "../../services";
 import { publicProcedure, router } from "../../trpc";
 import { setAuthenticationCookie } from "../../utils/cookie";

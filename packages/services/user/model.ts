@@ -1,3 +1,5 @@
+// This file contains the zod schemas for the user service
+
 import { z } from "zod";
 
 //signup model

@@ -27,6 +27,7 @@ const openApiDocument = generateOpenApiDocument(serverRouter, {
 });
 
 if (env.NODE_ENV !== "prod") {
+  //CORS CONFIGURATION FOR DEV ENVIRONMENT
   app.use(
     cors({
       origin: env.CLIENT_URL,
