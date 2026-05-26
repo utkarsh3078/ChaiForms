@@ -1,14 +1,17 @@
 //Write Procedures for authentication related operations like sign up, sign in, sign out etc. in this file. These procedures will be used in the trpc router for authentication.
 
+import UserService from "@repo/services/user";
 import { userService } from "../../services";
 import { publicProcedure, router } from "../../trpc";
-import { setAuthenticationCookie } from "../../utils/cookie";
+import { getAuthenticationCookie, setAuthenticationCookie } from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
   createUserWithEmailAndPasswordInputModel,
   createUserWithEmailAndPasswordOutputModel,
   signInUserWithEmailAndPasswordInputModel,
   signInUserWithEmailAndPasswordOutputModel,
+  getLoggedInUserInfoInput,
+  getLoggedInUserInfoOutput,
 } from "./model";
 
 const TAGS = ["Authentication"];
@@ -58,6 +61,34 @@ export const authRouter = router({
       setAuthenticationCookie(ctx, token);
       return {
         id,
+      };
+    }),
+
+  getLoggedInUserInfo: publicProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/getLoggedInUserInfo"),
+        tags: TAGS,
+      },
+    })
+    .input(getLoggedInUserInfoInput)
+    .output(getLoggedInUserInfoOutput)
+    .query(async ({ ctx }) => {
+      const userToken = getAuthenticationCookie(ctx);
+      if (!userToken) throw new Error("User not logged in");
+
+      const { id, email, fullName, profileImageUrl } =
+        await userService.verifyAndDecodeUserToken(userToken);
+
+      if (!id || !email || !fullName) {
+        throw new Error("Invalid user token");
+      }
+      return {
+        id,
+        email,
+        fullName,
+        profileImageUrl,
       };
     }),
 });

@@ -34,6 +34,6 @@ export const getLoggedInUserInfoOutput = z.object({
   id: z.string().describe("id of the user"),
   email: z.string().describe("Email of the user"),
   fullName: z.string().describe("Name of the user"),
-  profileImageUrl: z.string().describe,
+  profileImageUrl: z.string().describe("Profile image url of the user").optional().nullable(),
 });
 //

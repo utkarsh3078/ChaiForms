@@ -6,6 +6,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "~/components/ui
 import { Input } from "~/components/ui/input";
 import { useForm } from "react-hook-form";
 import { trpc } from "~/trpc/client";
+import { useRouter } from "next/navigation";
 
 type SignupFormValues = {
   name: string;
@@ -18,6 +19,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const { mutateAsync: createUserWithEmailAndPasswordAsync } =
     trpc.auth.createUserWithEmailAndPassword.useMutation();
   const { register, handleSubmit } = useForm<SignupFormValues>();
+  const router = useRouter();
 
   //handler function for form submission
   const onSubmit = async (values: SignupFormValues) => {
@@ -28,6 +30,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       fullName: values.name,
     });
     console.log(`User created with ID: ${id}`);
+    if (id) {
+      router.replace("/dashbooard");
+    }
   };
 
   return (

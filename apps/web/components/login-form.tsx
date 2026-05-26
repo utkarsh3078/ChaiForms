@@ -7,6 +7,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "~/components/ui
 import { Input } from "~/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useSignIn } from "~/hooks/api/auth/index";
+import { useRouter } from "next/navigation";
 
 type LoginFormValues = {
   email: string;
@@ -16,6 +17,7 @@ type LoginFormValues = {
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { signInUserWithEmailAndPasswordAsync } = useSignIn();
   const { register, handleSubmit } = useForm<LoginFormValues>();
+  const router = useRouter();
 
   const onSubmit = async (values: LoginFormValues) => {
     console.log(values);
@@ -23,6 +25,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       email: values.email,
       password: values.password,
     });
+    if (id) {
+      router.replace("/dashboard");
+    }
   };
 
   return (
