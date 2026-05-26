@@ -2,10 +2,18 @@ import { formService } from "../../services";
 import { authenticatedProcedure, router } from "../../trpc";
 import { generatePath } from "../../utils/path-generator";
 import {
+  createFieldInputModel,
+  createFieldOutputModel,
   createFormInputModel,
   createFormOutputModel,
+  deleteFieldInputModel,
+  deleteFieldOutputModel,
+  getFieldsInputModel,
+  getFieldsOutputModel,
   listFormsInputModel,
   listFormsOutputModel,
+  updateFieldInputModel,
+  updateFieldOutputModel,
 } from "./model";
 
 const TAGS = ["Form"];
@@ -55,6 +63,69 @@ export const formRouter = router({
         createdBy: form.createdBy ?? ctx.user.id,
         createdAt: form.createdAt?.toISOString() ?? null,
         updatedAt: form.updatedAt?.toISOString() ?? null,
+      }));
+    }),
+  createField: authenticatedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/createField"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(createFieldInputModel)
+    .output(createFieldOutputModel)
+    .mutation(async ({ input }) => {
+      const { id } = await formService.createField(input);
+      return { id };
+    }),
+  updateField: authenticatedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: getPath("/updateField"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(updateFieldInputModel)
+    .output(updateFieldOutputModel)
+    .mutation(async ({ input }) => {
+      const { id } = await formService.updateField(input);
+      return { id };
+    }),
+  deleteField: authenticatedProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: getPath("/deleteField"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(deleteFieldInputModel)
+    .output(deleteFieldOutputModel)
+    .mutation(async ({ input }) => {
+      const { id } = await formService.deleteField(input);
+      return { id };
+    }),
+  getFields: authenticatedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/getFields"),
+        tags: TAGS,
+      },
+    })
+    .input(getFieldsInputModel)
+    .output(getFieldsOutputModel)
+    .query(async ({ input }) => {
+      const fields = await formService.getFields(input);
+      return fields.map((field) => ({
+        ...field,
+        createdAt: field.createdAt?.toISOString() ?? null,
+        updatedAt: field.updatedAt?.toISOString() ?? null,
       }));
     }),
 });

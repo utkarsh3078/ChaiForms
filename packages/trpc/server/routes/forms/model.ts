@@ -28,3 +28,50 @@ export const listFormsOutputModel = z.array(
     updatedAt: z.string().nullable().describe("updated at (ISO string)"),
   }),
 );
+
+export const fieldTypeValues = ["TEXT", "EMAIL", "NUMBER", "DATE", "YES_NO", "PASSWORD"] as const;
+
+// Field procedures models
+export const createFieldInputModel = z.object({
+  formId: z.string().uuid(),
+  fieldDisplayText: z.string().max(255),
+  fieldKey: z.string().max(255),
+  placeholder: z.string().max(255).nullable().optional(),
+  isRequired: z.boolean().optional().default(false),
+  type: z.enum(fieldTypeValues),
+  index: z.coerce.number(),
+  description: z.string().nullable().optional(),
+});
+export const createFieldOutputModel = z.object({ id: z.string() });
+
+export const updateFieldInputModel = z.object({
+  id: z.string().uuid(),
+  fieldDisplayText: z.string().max(255).optional(),
+  fieldKey: z.string().max(255).optional(),
+  placeholder: z.string().max(255).nullable().optional(),
+  isRequired: z.boolean().optional(),
+  type: z.enum(fieldTypeValues).optional(),
+  index: z.coerce.number().optional(),
+  description: z.string().nullable().optional(),
+});
+export const updateFieldOutputModel = z.object({ id: z.string() });
+
+export const deleteFieldInputModel = z.object({ id: z.string().uuid() });
+export const deleteFieldOutputModel = z.object({ id: z.string() });
+
+export const getFieldsInputModel = z.object({ formId: z.string().uuid() });
+export const getFieldsOutputModel = z.array(
+  z.object({
+    id: z.string(),
+    formId: z.string(),
+    fieldLabel: z.string(),
+    fieldKey: z.string(),
+    placeholder: z.string().nullable(),
+    isRequired: z.boolean().nullable().default(false),
+    type: z.string(),
+    index: z.string(),
+    description: z.string().nullable(),
+    createdAt: z.string().nullable(),
+    updatedAt: z.string().nullable(),
+  }),
+);
