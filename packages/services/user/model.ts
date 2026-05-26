@@ -35,6 +35,7 @@ export const generateUserTokenPayload = z.object({
 });
 export type GenerateUserTokenPayloadType = z.infer<typeof generateUserTokenPayload>;
 
+//Google auth model
 export const getAuthenticationMethodOutputSchema = z.object({
   provider: z.enum(["GOOGLE_OAUTH"]),
   displayName: z.string().optional(),

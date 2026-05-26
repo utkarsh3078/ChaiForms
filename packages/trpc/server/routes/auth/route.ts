@@ -1,8 +1,7 @@
 //Write Procedures for authentication related operations like sign up, sign in, sign out etc. in this file. These procedures will be used in the trpc router for authentication.
 
-import UserService from "@repo/services/user";
 import { userService } from "../../services";
-import { publicProcedure, router } from "../../trpc";
+import { authenticatedProcedure, publicProcedure, router } from "../../trpc";
 import { getAuthenticationCookie, setAuthenticationCookie } from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
@@ -64,7 +63,7 @@ export const authRouter = router({
       };
     }),
 
-  getLoggedInUserInfo: publicProcedure
+  getLoggedInUserInfo: authenticatedProcedure
     .meta({
       openapi: {
         method: "POST",
@@ -75,15 +74,9 @@ export const authRouter = router({
     .input(getLoggedInUserInfoInput)
     .output(getLoggedInUserInfoOutput)
     .query(async ({ ctx }) => {
-      const userToken = getAuthenticationCookie(ctx);
-      if (!userToken) throw new Error("User not logged in");
-
-      const { id, email, fullName, profileImageUrl } =
-        await userService.verifyAndDecodeUserToken(userToken);
-
-      if (!id || !email || !fullName) {
-        throw new Error("Invalid user token");
-      }
+      const { id, email, fullName, profileImageUrl } = await userService.getUserInfoById(
+        ctx.user.id,
+      );
       return {
         id,
         email,

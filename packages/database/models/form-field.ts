@@ -5,13 +5,11 @@ import {
   timestamp,
   boolean,
   text,
-  PgArray,
   numeric,
   unique,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { formsTable } from "./form";
-import { number } from "zod/v4/mini";
 
 export const fieldTypesEnum = pgEnum("field_type_enum", [
   "TEXT",

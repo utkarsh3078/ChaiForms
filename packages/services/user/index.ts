@@ -45,7 +45,7 @@ class UserService {
     }
   }
 
-  private async getUserInfoById(id: string) {
+  public async getUserInfoById(id: string) {
     const user = await db
       .select({
         id: usersTable.id,
@@ -56,7 +56,7 @@ class UserService {
       .from(usersTable)
       .where(eq(usersTable.id, id));
     if (!user || user.length === 0) throw new Error("User not found");
-    return user[0];
+    return user[0]!;
   }
 
   public async createUserWithEmailAndPassword(payload: CreateUserWithEmailAndPasswordInputType) {
@@ -110,10 +110,7 @@ class UserService {
   }
   public async verifyAndDecodeUserToken(token: string) {
     const { id } = await this.verifyUserToken(token);
-    const userInfo = await this.getUserInfoById(id);
-    return {
-      ...userInfo,
-    };
+    return { id };
   }
 
   // extra code
