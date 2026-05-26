@@ -8,3 +8,8 @@ export const createFormInput = z.object({
   createdBy: z.string().describe("ID of the user who created the form"),
 });
 export type CreateFormInputType = z.infer<typeof createFormInput>;
+
+export const listFormsByUserIdInput = z.object({
+  userId: z.string().describe("ID of the user whose forms should be listed"),
+});
+export type ListFormsByUserIdInputType = z.infer<typeof listFormsByUserIdInput>;

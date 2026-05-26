@@ -14,8 +14,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Streamyst",
-  description: "Media Forwarding",
+  title: "ChaiForms",
+  description:
+    "Create and share forms with ease using ChaiForms. Our intuitive form builder allows you to design custom forms for surveys, feedback, registrations, and more. With seamless sharing options and real-time responses, ChaiForms is your go-to solution for all your form needs.",
 };
 
 export default function RootLayout({
