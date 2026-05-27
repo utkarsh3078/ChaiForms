@@ -20,7 +20,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const router = useRouter();
 
   const onSubmit = async (values: LoginFormValues) => {
-    console.log(values);
     const { id } = await signInUserWithEmailAndPasswordAsync({
       email: values.email,
       password: values.password,

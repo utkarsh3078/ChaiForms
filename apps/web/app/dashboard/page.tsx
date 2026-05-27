@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import DashboardShell from "~/components/dashboard/DashboardShell";
 import TopNavbar from "~/components/dashboard/TopNavbar";
+import { Button } from "~/components/ui/button";
 import PageHeader from "~/components/dashboard/PageHeader";
 import StatsCard from "~/components/dashboard/StatsCard";
 import SearchFilters from "~/components/dashboard/SearchFilters";
@@ -11,6 +12,7 @@ import FormCard from "~/components/dashboard/FormCard";
 import EmptyState from "~/components/dashboard/EmptyState";
 import { useListForms } from "~/hooks/api/form";
 import { Skeleton } from "~/components/ui/skeleton";
+import CreateFormDialog from "~/components/dashboard/CreateFormDialog";
 
 export default function Page() {
   const { forms, isLoading: isFormsLoading, error: formsError } = useListForms();
@@ -74,6 +76,7 @@ export default function Page() {
             <EmptyState
               title="No forms found"
               description="You don't have any forms matching this filter. Create a new form to get started."
+              action={<CreateFormDialog trigger={<Button>Create form</Button>} />}
             />
           </div>
         )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useForm } from "react-hook-form";
 import FormCard from "~/components/dashboard/FormCard";
 
@@ -46,6 +46,12 @@ export default function FormsPage() {
       expiryTime: "",
     },
   });
+
+  useEffect(() => {
+    if (window.location.search.includes("create=1")) {
+      setOpen(true);
+    }
+  }, []);
 
   const onSubmit = async (values: CreateFormValues) => {
     const expiryDate = new Date(`${values.expiryDate}T00:00:00`);

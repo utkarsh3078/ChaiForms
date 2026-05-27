@@ -21,6 +21,7 @@ import {
 
 import { NavUser } from "~/components/nav-user";
 import SidebarNav from "~/components/dashboard/SidebarNav";
+import { useUser } from "~/hooks/api/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -31,15 +32,16 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 
-const data = {
-  user: {
-    name: "Product Owner",
-    email: "admin@example.com",
-    avatar: "/avatars/user.svg",
-  },
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser();
+
+  const sidebarUser = {
+    name: user?.fullName ?? "Product Owner",
+    email: user?.email ?? "test@example.com",
+    avatar: user?.profileImageUrl ?? "/avatars/user.svg",
+    details: user ? `User ID: ${user.id}` : "Signed in account details will appear here",
+  };
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -58,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarNav />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={sidebarUser} />
       </SidebarFooter>
     </Sidebar>
   );

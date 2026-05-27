@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { IconBell, IconPlus, IconSearch } from "@tabler/icons-react";
 import { cn } from "~/lib/utils";
+import CreateFormDialog from "~/components/dashboard/CreateFormDialog";
 
 export function TopNavbar({ className }: { className?: string }) {
   return (
@@ -20,10 +21,14 @@ export function TopNavbar({ className }: { className?: string }) {
             <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
               <IconBell />
             </Button>
-            <Button size="sm" className="flex items-center" variant="default">
-              <IconPlus />
-              <span className="ml-2 hidden sm:inline">Create</span>
-            </Button>
+            <CreateFormDialog
+              trigger={
+                <Button size="sm" className="flex items-center" variant="default">
+                  <IconPlus />
+                  <span className="ml-2 hidden sm:inline">Create</span>
+                </Button>
+              }
+            />
             <Avatar>
               <AvatarImage src="/avatars/user.svg" alt="User" />
               <AvatarFallback>JD</AvatarFallback>
