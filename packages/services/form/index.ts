@@ -1,11 +1,14 @@
 import { db, desc, eq, asc } from "@repo/database";
 import { formsTable } from "@repo/database/models/form";
+import { formSubmissionTable } from "@repo/database/models/form-submissions";
 import { formsFieldsTable } from "@repo/database/models/form-field";
 
 import {
   createFormInput,
+  getFormByIdInput,
   listFormsByUserIdInput,
   type CreateFormInputType,
+  type GetFormByIdInputType,
   type ListFormsByUserIdInputType,
   createFieldInput,
   updateFieldInput,
@@ -15,6 +18,8 @@ import {
   type UpdateFieldInputType,
   type DeleteFieldInputType,
   type GetFieldsInputType,
+  createSubmissionInput,
+  type CreateSubmissionInputType,
 } from "./model";
 import type { InferModel } from "@repo/database";
 
@@ -89,16 +94,8 @@ class FormService {
 
   public async updateField(payload: UpdateFieldInputType) {
     const parsedUpdate = await updateFieldInput.parseAsync(payload);
-    const {
-      id,
-      fieldDisplayText,
-      fieldKey,
-      placeholder,
-      isRequired,
-      type,
-      index,
-      description,
-    } = parsedUpdate;
+    const { id, fieldDisplayText, fieldKey, placeholder, isRequired, type, index, description } =
+      parsedUpdate;
 
     type FieldUpdate = Partial<InferModel<typeof formsFieldsTable, "insert">>;
     const updates: FieldUpdate = {};
@@ -155,6 +152,87 @@ class FormService {
       .where(eq(formsTable.createdBy, userId))
       .orderBy(desc(formsTable.createdAt));
     return forms;
+  }
+
+  public async getFormById(payload: GetFormByIdInputType) {
+    const { formId } = await getFormByIdInput.parseAsync(payload);
+
+    const rows = await db
+      .select({
+        formId: formsTable.id,
+        title: formsTable.title,
+        description: formsTable.description,
+        expiryTime: formsTable.expiryTime,
+        expiryDate: formsTable.expiryDate,
+        createdBy: formsTable.createdBy,
+        createdAt: formsTable.createdAt,
+        updatedAt: formsTable.updatedAt,
+        fieldId: formsFieldsTable.id,
+        fieldFormId: formsFieldsTable.formId,
+        fieldLabel: formsFieldsTable.fieldLabel,
+        fieldKey: formsFieldsTable.fieldKey,
+        placeholder: formsFieldsTable.placeholder,
+        isRequired: formsFieldsTable.isRequired,
+        type: formsFieldsTable.type,
+        index: formsFieldsTable.index,
+        fieldDescription: formsFieldsTable.description,
+        fieldCreatedAt: formsFieldsTable.createdAt,
+        fieldUpdatedAt: formsFieldsTable.updatedAt,
+      })
+      .from(formsTable)
+      .leftJoin(formsFieldsTable, eq(formsTable.id, formsFieldsTable.formId))
+      .where(eq(formsTable.id, formId));
+
+    const firstRow = rows[0];
+    if (!firstRow) throw new Error("Form not found");
+
+    const form = {
+      id: firstRow.formId,
+      title: firstRow.title,
+      description: firstRow.description,
+      expiryTime: firstRow.expiryTime,
+      expiryDate: firstRow.expiryDate,
+      createdBy: firstRow.createdBy,
+      createdAt: firstRow.createdAt,
+      updatedAt: firstRow.updatedAt,
+    };
+
+    const fields = rows
+      .filter((row) => row.fieldId)
+      .map((row) => ({
+        id: row.fieldId as string,
+        formId: row.fieldFormId as string,
+        fieldLabel: row.fieldLabel as string,
+        fieldKey: row.fieldKey as string,
+        placeholder: row.placeholder,
+        isRequired: row.isRequired,
+        type: row.type as string,
+        index: row.index as string,
+        description: row.fieldDescription,
+        createdAt: row.fieldCreatedAt,
+        updatedAt: row.fieldUpdatedAt,
+      }));
+
+    return { form, fields };
+  }
+
+  public async createSubmission(payload: CreateSubmissionInputType) {
+    const parsed = await createSubmissionInput.parseAsync(payload);
+
+    const insertObj = {
+      formId: parsed.formId,
+      values: parsed.values,
+    };
+
+    const result = await db
+      .insert(formSubmissionTable)
+      .values(insertObj)
+      .returning({ id: formSubmissionTable.id });
+
+    if (!result || result.length === 0 || !result[0]?.id)
+      throw new Error("Failed to create submission");
+
+    return { id: result[0].id };
   }
 }
 

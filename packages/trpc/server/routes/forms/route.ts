@@ -1,11 +1,13 @@
 import { formService } from "../../services";
-import { authenticatedProcedure, router } from "../../trpc";
+import { authenticatedProcedure, publicProcedure, router } from "../../trpc";
 import { generatePath } from "../../utils/path-generator";
 import {
   createFieldInputModel,
   createFieldOutputModel,
   createFormInputModel,
   createFormOutputModel,
+  getFormByIdInputModel,
+  getFormByIdOutputModel,
   deleteFieldInputModel,
   deleteFieldOutputModel,
   getFieldsInputModel,
@@ -14,6 +16,8 @@ import {
   listFormsOutputModel,
   updateFieldInputModel,
   updateFieldOutputModel,
+  createSubmissionInputModel,
+  createSubmissionOutputModel,
 } from "./model";
 
 const TAGS = ["Form"];
@@ -41,6 +45,48 @@ export const formRouter = router({
         createdBy: ctx.user.id,
       });
 
+      return { id };
+    }),
+  getFormById: publicProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/getFormById"),
+        tags: TAGS,
+      },
+    })
+    .input(getFormByIdInputModel)
+    .output(getFormByIdOutputModel)
+    .query(async ({ input }) => {
+      const data = await formService.getFormById(input);
+
+      return {
+        form: {
+          ...data.form,
+          expiryTime: data.form.expiryTime.toISOString(),
+          expiryDate: data.form.expiryDate.toISOString(),
+          createdAt: data.form.createdAt?.toISOString() ?? null,
+          updatedAt: data.form.updatedAt?.toISOString() ?? null,
+        },
+        fields: data.fields.map((field) => ({
+          ...field,
+          createdAt: field.createdAt?.toISOString() ?? null,
+          updatedAt: field.updatedAt?.toISOString() ?? null,
+        })),
+      };
+    }),
+  createSubmission: publicProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/createSubmission"),
+        tags: TAGS,
+      },
+    })
+    .input(createSubmissionInputModel)
+    .output(createSubmissionOutputModel)
+    .mutation(async ({ input }) => {
+      const { id } = await formService.createSubmission(input);
       return { id };
     }),
   listForms: authenticatedProcedure

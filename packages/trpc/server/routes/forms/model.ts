@@ -29,6 +29,38 @@ export const listFormsOutputModel = z.array(
   }),
 );
 
+export const fieldOutputModel = z.object({
+  id: z.string(),
+  formId: z.string(),
+  fieldLabel: z.string(),
+  fieldKey: z.string(),
+  placeholder: z.string().nullable(),
+  isRequired: z.boolean().nullable().default(false),
+  type: z.string(),
+  index: z.string(),
+  description: z.string().nullable(),
+  createdAt: z.string().nullable(),
+  updatedAt: z.string().nullable(),
+});
+
+export const getFormByIdInputModel = z.object({
+  formId: z.string().uuid(),
+});
+
+export const getFormByIdOutputModel = z.object({
+  form: z.object({
+    id: z.string().describe("id of the form"),
+    title: z.string().describe("title of the form"),
+    description: z.string().nullable().optional().describe("description of the form"),
+    expiryTime: z.string().describe("expiry time (ISO string)"),
+    expiryDate: z.string().describe("expiry date (ISO string)"),
+    createdBy: z.string().nullable().describe("id of the user who created the form"),
+    createdAt: z.string().nullable().describe("created at (ISO string)"),
+    updatedAt: z.string().nullable().describe("updated at (ISO string)"),
+  }),
+  fields: z.array(fieldOutputModel),
+});
+
 export const fieldTypeValues = ["TEXT", "EMAIL", "NUMBER", "DATE", "YES_NO", "PASSWORD"] as const;
 
 // Field procedures models
@@ -60,18 +92,16 @@ export const deleteFieldInputModel = z.object({ id: z.string().uuid() });
 export const deleteFieldOutputModel = z.object({ id: z.string() });
 
 export const getFieldsInputModel = z.object({ formId: z.string().uuid() });
-export const getFieldsOutputModel = z.array(
-  z.object({
-    id: z.string(),
-    formId: z.string(),
-    fieldLabel: z.string(),
-    fieldKey: z.string(),
-    placeholder: z.string().nullable(),
-    isRequired: z.boolean().nullable().default(false),
-    type: z.string(),
-    index: z.string(),
-    description: z.string().nullable(),
-    createdAt: z.string().nullable(),
-    updatedAt: z.string().nullable(),
-  }),
-);
+export const getFieldsOutputModel = z.array(fieldOutputModel);
+
+export const submissionValueModel = z.object({
+  formFieldId: z.string().uuid(),
+  value: z.string(),
+});
+
+export const createSubmissionInputModel = z.object({
+  formId: z.string().uuid(),
+  values: z.array(submissionValueModel).min(1),
+});
+
+export const createSubmissionOutputModel = z.object({ id: z.string() });

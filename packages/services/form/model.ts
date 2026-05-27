@@ -14,6 +14,11 @@ export const listFormsByUserIdInput = z.object({
 });
 export type ListFormsByUserIdInputType = z.infer<typeof listFormsByUserIdInput>;
 
+export const getFormByIdInput = z.object({
+  formId: z.string().uuid().describe("ID of the form to retrieve"),
+});
+export type GetFormByIdInputType = z.infer<typeof getFormByIdInput>;
+
 export const fieldTypeValues = ["TEXT", "EMAIL", "NUMBER", "DATE", "YES_NO", "PASSWORD"] as const;
 
 export const createFieldInput = z.object({
@@ -49,3 +54,13 @@ export const getFieldsInput = z.object({
   formId: z.string().uuid().describe("ID of the form to retrieve fields for"),
 });
 export type GetFieldsInputType = z.infer<typeof getFieldsInput>;
+
+export const submissionValue = z.object({
+  formFieldId: z.string().uuid().describe("ID of the form field"),
+  value: z.string().describe("Submitted value for the field"),
+});
+export const createSubmissionInput = z.object({
+  formId: z.string().uuid().describe("ID of the form being submitted"),
+  values: z.array(submissionValue).min(1).describe("Array of submitted field values"),
+});
+export type CreateSubmissionInputType = z.infer<typeof createSubmissionInput>;
