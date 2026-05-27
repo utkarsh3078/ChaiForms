@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { format } from "date-fns";
@@ -41,9 +41,12 @@ export function FormCard({ form, className }: { form: any; className?: string })
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
               <a href={`/dashboard/forms/${form.id}`}>Open</a>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <a href={`/dashboard/responses?formId=${form.id}`}>Responses</a>
             </Button>
             <Button size="sm" variant="outline">
               More

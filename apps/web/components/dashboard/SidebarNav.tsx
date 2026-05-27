@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   IconListDetails,
   IconChartBar,
@@ -13,6 +14,8 @@ import {
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "~/components/ui/sidebar";
 
 export function SidebarNav() {
+  const pathname = usePathname();
+
   const items = [
     { title: "Dashboard", url: "/dashboard", icon: IconLayoutDashboard },
     { title: "Forms", url: "/dashboard/forms", icon: IconListDetails },
@@ -27,7 +30,10 @@ export function SidebarNav() {
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton
+              asChild
+              isActive={pathname === item.url || pathname.startsWith(`${item.url}/`)}
+            >
               <Link href={item.url} className="flex items-center gap-3">
                 <item.icon />
                 <span>{item.title}</span>

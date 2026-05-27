@@ -21,7 +21,7 @@ export function SearchFilters({
           variant={active === f ? "default" : "ghost"}
           onClick={() => onChange?.(f)}
         >
-          {f[0].toUpperCase() + f.slice(1)}
+          {f.charAt(0).toUpperCase() + f.slice(1)}
         </Button>
       ))}
     </div>
