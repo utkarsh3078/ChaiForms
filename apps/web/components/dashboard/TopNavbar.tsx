@@ -25,7 +25,7 @@ export function TopNavbar({ className }: { className?: string }) {
               <span className="ml-2 hidden sm:inline">Create</span>
             </Button>
             <Avatar>
-              <AvatarImage src="/avatars/user.png" alt="User" />
+              <AvatarImage src="/avatars/user.svg" alt="User" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
           </div>

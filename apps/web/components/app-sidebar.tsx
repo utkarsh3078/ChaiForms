@@ -35,7 +35,7 @@ const data = {
   user: {
     name: "Product Owner",
     email: "admin@example.com",
-    avatar: "/avatars/user.png",
+    avatar: "/avatars/user.svg",
   },
 };
 
