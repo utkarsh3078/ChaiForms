@@ -101,7 +101,3 @@ Contributing
 Contact
 
 - Open an issue in this repository or contact the maintainers listed in the project.
-
----
-
-_This README was generated/updated to provide a concise onboarding and developer reference for the ChaiForms monorepo._
