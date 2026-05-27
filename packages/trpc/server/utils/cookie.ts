@@ -7,11 +7,13 @@ const ONE_DAY = 24 * ONE_HOUR;
 const ONE_MONTH = 30 * ONE_DAY;
 const ONE_YEAR = 12 * ONE_MONTH;
 
+const isProduction = ["production", "prod"].includes(process.env.NODE_ENV ?? "");
+
 const defaultCookieOption: CookieOptions = {
   path: "/",
   httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
   maxAge: ONE_YEAR,
 };
 
@@ -34,7 +36,7 @@ export function getCookieFactory(req: Request) {
 }
 export function clearCookieFactory(res: Response) {
   return function clearCookie(name: string) {
-    res.clearCookie(name);
+    res.clearCookie(name, defaultCookieOption);
   };
 }
 

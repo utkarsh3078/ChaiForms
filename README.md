@@ -18,4 +18,9 @@ What each one means:
 - `CLIENT_URL`: public URL of the frontend deployment, for example `https://your-web.vercel.app`
 - `NEXT_PUBLIC_API_URL`: API URL used by the frontend, for example `https://your-api.vercel.app/trpc`
 
+For the web deployment, set the Vercel project Root Directory to `apps/web`.
+Do not point it at `apps/web/app`; that path makes Vercel look for `.next` in the wrong place.
+
+The web app builds to `apps/web/.next`, and the local Vercel config lives in [apps/web/vercel.json](apps/web/vercel.json).
+
 DOCS: https://chai-forms-api.vercel.app/docs
