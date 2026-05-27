@@ -46,7 +46,6 @@ type FieldType = (typeof FIELD_TYPES)[number];
 type CreateFieldValues = {
   fieldDisplayText: string;
   fieldKey: string;
-  placeholder: string;
   type: FieldType;
   isRequired: boolean;
   description: string;
@@ -70,7 +69,6 @@ const FIELD_TYPE_LABELS: Record<FieldType, string> = {
 const createFieldDefaultValues: CreateFieldValues = {
   fieldDisplayText: "",
   fieldKey: "",
-  placeholder: "",
   type: "TEXT",
   isRequired: false,
   description: "",
@@ -151,7 +149,6 @@ export default function FormBuilderPage() {
     id: string;
     fieldLabel: string;
     fieldKey: string;
-    placeholder: string | null;
     type: string;
     isRequired: boolean | null;
     description: string | null;
@@ -160,7 +157,6 @@ export default function FormBuilderPage() {
     reset({
       fieldDisplayText: field.fieldLabel,
       fieldKey: field.fieldKey,
-      placeholder: field.placeholder ?? "",
       type: getFieldType(field.type),
       isRequired: Boolean(field.isRequired),
       description: field.description ?? "",
@@ -185,7 +181,6 @@ export default function FormBuilderPage() {
       const fieldPayload = {
         fieldDisplayText: values.fieldDisplayText,
         fieldKey: getAvailableFieldKey(values.fieldDisplayText, values.fieldKey, existingFields),
-        placeholder: values.placeholder.trim() || null,
         isRequired: values.isRequired,
         type: values.type,
         description: values.description.trim() || null,
@@ -343,39 +338,20 @@ export default function FormBuilderPage() {
                       </div>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-                      <div className="grid gap-2">
-                        <Label htmlFor="placeholder">Placeholder</Label>
-                        <Input
-                          id="placeholder"
-                          placeholder="Enter your answer"
-                          {...register("placeholder", {
-                            maxLength: {
-                              value: 255,
-                              message: "Placeholder must be 255 characters or less",
-                            },
-                          })}
-                        />
-                        {errors.placeholder ? (
-                          <p className="text-sm text-destructive">{errors.placeholder.message}</p>
-                        ) : null}
-                      </div>
-
-                      <Controller
-                        control={control}
-                        name="isRequired"
-                        render={({ field }) => (
-                          <div className="flex h-9 items-center justify-between gap-4 rounded-md border px-3">
-                            <Label htmlFor="isRequired">Required</Label>
-                            <Switch
-                              id="isRequired"
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </div>
-                        )}
-                      />
-                    </div>
+                    <Controller
+                      control={control}
+                      name="isRequired"
+                      render={({ field }) => (
+                        <div className="flex h-9 items-center justify-between gap-4 rounded-md border px-3">
+                          <Label htmlFor="isRequired">Required</Label>
+                          <Switch
+                            id="isRequired"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </div>
+                      )}
+                    />
 
                     <div className="grid gap-2">
                       <Label htmlFor="description">Description</Label>
@@ -516,7 +492,6 @@ export default function FormBuilderPage() {
 
                               <div className="grid gap-1 text-sm text-muted-foreground">
                                 {field.description ? <p>{field.description}</p> : null}
-                                {field.placeholder ? <p>Placeholder: {field.placeholder}</p> : null}
                                 <p className="break-all text-xs">Key: {field.fieldKey}</p>
                               </div>
                             </div>

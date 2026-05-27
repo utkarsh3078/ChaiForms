@@ -53,7 +53,6 @@ class FormService {
       formId: parsed.formId,
       fieldLabel: parsed.fieldDisplayText,
       fieldKey: parsed.fieldKey,
-      placeholder: parsed.placeholder ?? null,
       isRequired: parsed.isRequired ?? false,
       type: parsed.type,
       index: String(parsed.index) as FieldInsert["index"],
@@ -79,7 +78,6 @@ class FormService {
         formId: formsFieldsTable.formId,
         fieldLabel: formsFieldsTable.fieldLabel,
         fieldKey: formsFieldsTable.fieldKey,
-        placeholder: formsFieldsTable.placeholder,
         isRequired: formsFieldsTable.isRequired,
         type: formsFieldsTable.type,
         index: formsFieldsTable.index,
@@ -96,15 +94,13 @@ class FormService {
 
   public async updateField(payload: UpdateFieldInputType) {
     const parsedUpdate = await updateFieldInput.parseAsync(payload);
-    const { id, fieldDisplayText, fieldKey, placeholder, isRequired, type, index, description } =
-      parsedUpdate;
+    const { id, fieldDisplayText, fieldKey, isRequired, type, index, description } = parsedUpdate;
 
     type FieldUpdate = Partial<InferModel<typeof formsFieldsTable, "insert">>;
     const updates: FieldUpdate = {};
 
     if (fieldDisplayText !== undefined) updates.fieldLabel = fieldDisplayText;
     if (fieldKey !== undefined) updates.fieldKey = fieldKey;
-    if (placeholder !== undefined) updates.placeholder = placeholder;
     if (isRequired !== undefined) updates.isRequired = isRequired;
     if (type !== undefined) updates.type = type;
     if (index !== undefined) updates.index = String(index) as FieldUpdate["index"];
@@ -173,7 +169,6 @@ class FormService {
         fieldFormId: formsFieldsTable.formId,
         fieldLabel: formsFieldsTable.fieldLabel,
         fieldKey: formsFieldsTable.fieldKey,
-        placeholder: formsFieldsTable.placeholder,
         isRequired: formsFieldsTable.isRequired,
         type: formsFieldsTable.type,
         index: formsFieldsTable.index,
@@ -206,7 +201,6 @@ class FormService {
         formId: row.fieldFormId as string,
         fieldLabel: row.fieldLabel as string,
         fieldKey: row.fieldKey as string,
-        placeholder: row.placeholder,
         isRequired: row.isRequired,
         type: row.type as string,
         index: row.index as string,

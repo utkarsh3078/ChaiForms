@@ -30,7 +30,6 @@ export const formsFieldsTable = pgTable(
 
     fieldLabel: varchar("field_display_text", { length: 255 }).notNull(),
     fieldKey: varchar("field_key", { length: 255 }).notNull(),
-    placeholder: varchar("placeholder", { length: 255 }),
     isRequired: boolean("is_required").default(false).notNull(),
 
     type: fieldTypesEnum("type").notNull(),

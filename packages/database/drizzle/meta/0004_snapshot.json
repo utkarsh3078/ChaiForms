@@ -1,6 +1,6 @@
 {
-  "id": "d8df9c66-30a1-467e-9ed8-a2106c1e83e9",
-  "prevId": "2c651fa6-6aa9-4f10-a9f3-82558e53f3ad",
+  "id": "18541ce8-c0e1-4f94-9ed3-3d277c9fb99e",
+  "prevId": "d8df9c66-30a1-467e-9ed8-a2106c1e83e9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -73,7 +73,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -141,8 +143,12 @@
           "name": "forms_created_by_users_id_fk",
           "tableFrom": "forms",
           "tableTo": "users",
-          "columnsFrom": ["created_by"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -228,8 +234,12 @@
           "name": "forms_fields_form_id_forms_id_fk",
           "tableFrom": "forms_fields",
           "tableTo": "forms",
-          "columnsFrom": ["form_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "form_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -239,7 +249,10 @@
         "forms_fields_form_id_index_unique": {
           "name": "forms_fields_form_id_index_unique",
           "nullsNotDistinct": false,
-          "columns": ["form_id", "index"]
+          "columns": [
+            "form_id",
+            "index"
+          ]
         }
       },
       "policies": {},
@@ -261,7 +274,7 @@
           "name": "form_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "values": {
           "name": "values",
@@ -289,8 +302,12 @@
           "name": "form_submissions_form_id_forms_id_fk",
           "tableFrom": "form_submissions",
           "tableTo": "forms",
-          "columnsFrom": ["form_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "form_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -306,7 +323,14 @@
     "public.field_type_enum": {
       "name": "field_type_enum",
       "schema": "public",
-      "values": ["TEXT", "EMAIL", "NUMBER", "DATE", "YES_NO", "PASSWORD"]
+      "values": [
+        "TEXT",
+        "EMAIL",
+        "NUMBER",
+        "DATE",
+        "YES_NO",
+        "PASSWORD"
+      ]
     }
   },
   "schemas": {},

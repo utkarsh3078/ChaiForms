@@ -29,6 +29,13 @@
       "when": 1779858386157,
       "tag": "0003_special_azazel",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779875763655,
+      "tag": "0004_superb_miss_america",
+      "breakpoints": true
     }
   ]
 }

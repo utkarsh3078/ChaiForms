@@ -254,6 +254,9 @@ export default function PublicFormPage() {
                     const key = field.id;
                     const value = values[key];
 
+                    const isNameField =
+                      field.fieldKey === "name" || field.fieldLabel?.toLowerCase() === "name";
+
                     return (
                       <div
                         key={key}
@@ -279,7 +282,14 @@ export default function PublicFormPage() {
                           </p>
                         ) : null}
 
-                        {field.type === "YES_NO" ? (
+                        {isNameField ? (
+                          <Input
+                            type="text"
+                            value={typeof value === "boolean" ? "" : (value ?? "")}
+                            onChange={(e) => handleChange(key, e.target.value)}
+                            className="h-9 rounded-lg border-border/60 bg-background/80"
+                          />
+                        ) : field.type === "YES_NO" ? (
                           <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-card px-4 py-3">
                             <Checkbox
                               checked={Boolean(value)}
@@ -292,7 +302,6 @@ export default function PublicFormPage() {
                         ) : field.type === "PASSWORD" ? (
                           <Input
                             type="password"
-                            placeholder={field.placeholder ?? undefined}
                             value={typeof value === "boolean" ? "" : (value ?? "")}
                             onChange={(e) => handleChange(key, e.target.value)}
                             className="h-11 rounded-xl border-border/70 bg-background/80"
@@ -307,7 +316,6 @@ export default function PublicFormPage() {
                         ) : field.type === "EMAIL" ? (
                           <Input
                             type="email"
-                            placeholder={field.placeholder ?? undefined}
                             value={typeof value === "boolean" ? "" : (value ?? "")}
                             onChange={(e) => handleChange(key, e.target.value)}
                             className="h-11 rounded-xl border-border/70 bg-background/80"
@@ -315,14 +323,12 @@ export default function PublicFormPage() {
                         ) : field.type === "NUMBER" ? (
                           <Input
                             type="number"
-                            placeholder={field.placeholder ?? undefined}
                             value={typeof value === "boolean" ? "" : (value ?? "")}
                             onChange={(e) => handleChange(key, e.target.value)}
                             className="h-11 rounded-xl border-border/70 bg-background/80"
                           />
                         ) : field.type === "TEXT" && field.description ? (
                           <Textarea
-                            placeholder={field.placeholder ?? undefined}
                             value={typeof value === "boolean" ? "" : (value ?? "")}
                             onChange={(e) => handleChange(key, e.target.value)}
                             className="min-h-28 rounded-xl border-border/70 bg-background/80"
@@ -330,7 +336,6 @@ export default function PublicFormPage() {
                         ) : (
                           <Input
                             type="text"
-                            placeholder={field.placeholder ?? undefined}
                             value={typeof value === "boolean" ? "" : (value ?? "")}
                             onChange={(e) => handleChange(key, e.target.value)}
                             className="h-11 rounded-xl border-border/70 bg-background/80"

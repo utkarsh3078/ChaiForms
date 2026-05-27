@@ -1,0 +1,1 @@
+ALTER TABLE "form_submissions" ALTER COLUMN "form_id" SET NOT NULL;
