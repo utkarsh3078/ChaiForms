@@ -17,4 +17,8 @@ async function init() {
   }
 }
 
-init();
+if (process.env.VERCEL !== "1") {
+  init();
+}
+
+export default expressApplication;
