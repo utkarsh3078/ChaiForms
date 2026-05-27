@@ -26,9 +26,11 @@ const openApiDocument = generateOpenApiDocument(serverRouter, {
   baseUrl: env.BASE_URL.concat("/api"),
 });
 
+const allowedClientOrigin = new URL(env.CLIENT_URL).origin;
+
 app.use(
   cors({
-    origin: env.CLIENT_URL,
+    origin: allowedClientOrigin,
     credentials: true,
   }),
 );

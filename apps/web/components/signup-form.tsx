@@ -23,13 +23,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   //handler function for form submission
   const onSubmit = async (values: SignupFormValues) => {
-    console.log(values);
     const { id } = await createUserWithEmailAndPasswordAsync({
       email: values.email,
       password: values.password,
       fullName: values.name,
     });
-    console.log(`User created with ID: ${id}`);
     if (id) {
       router.replace("/dashbooard");
     }
