@@ -2,13 +2,19 @@
 
 import { userService } from "../../services";
 import { authenticatedProcedure, publicProcedure, router } from "../../trpc";
-import { getAuthenticationCookie, setAuthenticationCookie } from "../../utils/cookie";
+import {
+  clearAuthenticationCookie,
+  getAuthenticationCookie,
+  setAuthenticationCookie,
+} from "../../utils/cookie";
 import { generatePath } from "../../utils/path-generator";
 import {
   createUserWithEmailAndPasswordInputModel,
   createUserWithEmailAndPasswordOutputModel,
   signInUserWithEmailAndPasswordInputModel,
   signInUserWithEmailAndPasswordOutputModel,
+  signOutUserInputModel,
+  signOutUserOutputModel,
   getLoggedInUserInfoInput,
   getLoggedInUserInfoOutput,
 } from "./model";
@@ -60,6 +66,24 @@ export const authRouter = router({
       setAuthenticationCookie(ctx, token);
       return {
         id,
+      };
+    }),
+
+  signOutUser: publicProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/signOutUser"),
+        tags: TAGS,
+      },
+    })
+    .input(signOutUserInputModel)
+    .output(signOutUserOutputModel)
+    .mutation(async ({ ctx }) => {
+      await clearAuthenticationCookie(ctx);
+
+      return {
+        success: true,
       };
     }),
 

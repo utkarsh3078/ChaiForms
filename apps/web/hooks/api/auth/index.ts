@@ -59,6 +59,38 @@ export const useSignIn = () => {
   };
 };
 
+export const useSignOut = () => {
+  const utils = trpc.useUtils();
+
+  const signOutUserAsync = async () => {
+    const response = await fetch("/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to sign out");
+    }
+
+    await utils.auth.getLoggedInUserInfo.invalidate();
+  };
+
+  const signOutUser = () => {
+    void signOutUserAsync();
+  };
+
+  return {
+    signOutUserAsync,
+    signOutUser,
+    error: undefined,
+    failureCount: 0,
+    isError: false,
+    isIdle: true,
+    isSuccess: false,
+    status: "idle" as const,
+  };
+};
+
 export const useUser = () => {
   const {
     data: user,
