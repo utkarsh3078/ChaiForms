@@ -2,6 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 
@@ -240,12 +241,34 @@ export default function FormBuilderPage() {
                 <CardDescription>
                   Edit and configure form {formId} from this builder page.
                 </CardDescription>
+                {formId ? (
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <span>Public form link:</span>
+                    <Button asChild variant="link" className="h-auto p-0 text-sm">
+                      <Link href={`/form/${formId}`} target="_blank" rel="noreferrer">
+                        /form/{formId}
+                      </Link>
+                    </Button>
+                    <span className="hidden sm:inline">
+                      Share this publicly to collect responses.
+                    </span>
+                  </div>
+                ) : null}
               </div>
               <Dialog open={isFieldDialogOpen} onOpenChange={onFieldDialogOpenChange}>
-                <Button disabled={!form} onClick={openCreateFieldDialog}>
-                  <Plus />
-                  Add field
-                </Button>
+                <div className="flex flex-wrap items-center gap-2">
+                  {formId ? (
+                    <Button asChild variant="outline">
+                      <Link href={`/form/${formId}`} target="_blank" rel="noreferrer">
+                        Open public form
+                      </Link>
+                    </Button>
+                  ) : null}
+                  <Button disabled={!form} onClick={openCreateFieldDialog}>
+                    <Plus />
+                    Add field
+                  </Button>
+                </div>
                 <DialogContent className="sm:max-w-2xl">
                   <DialogHeader>
                     <DialogTitle>
