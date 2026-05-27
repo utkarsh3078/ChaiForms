@@ -19,8 +19,8 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-import { NavMain } from "~/components/nav-main";
 import { NavUser } from "~/components/nav-user";
+import SidebarNav from "~/components/dashboard/SidebarNav";
 import {
   Sidebar,
   SidebarContent,
@@ -33,20 +33,10 @@ import {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "Product Owner",
+    email: "admin@example.com",
+    avatar: "/avatars/user.png",
   },
-  navMain: [
-    {
-      title: "Forms",
-      url: "/dashboard/forms",
-      icon: IconListDetails,
-    },
-  ],
-  navClouds: [],
-  navSecondary: [],
-  documents: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -65,7 +55,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <SidebarNav />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
