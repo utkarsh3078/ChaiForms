@@ -37,7 +37,7 @@ export function CreateFormDialog({
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CreateFormValues>({
     defaultValues: {
       title: "",
@@ -45,6 +45,7 @@ export function CreateFormDialog({
       expiryDate: "",
       expiryTime: "",
     },
+    mode: "onChange",
   });
 
   useEffect(() => {
@@ -158,7 +159,7 @@ export function CreateFormDialog({
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={status === "pending"}>
+            <Button type="submit" disabled={status === "pending" || !isValid}>
               {status === "pending" ? "Creating..." : "Create form"}
             </Button>
           </DialogFooter>

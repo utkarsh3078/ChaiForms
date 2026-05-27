@@ -1,0 +1,67 @@
+
+> trpc-monorepo@ build /Users/sudhiryadav/Web dev Cohort 2026/Hackathon/ChaiForms
+> dotenv -- turbo build
+
+• turbo 2.7.2
+• Packages in scope: @repo/api, @repo/database, @repo/eslint-config, @repo/logger, @repo/services, @repo/trpc, @repo/typescript-config, web
+• Running build in 8 packages
+• Remote caching disabled
+@repo/api:build: cache hit, replaying logs 5e4afc1ad3cc2b72
+web:build: cache miss, executing e72076c1258f27e2
+@repo/api:build: 
+@repo/api:build: 
+@repo/api:build: > @repo/api@1.0.0 build /Users/sudhiryadav/Web dev Cohort 2026/Hackathon/ChaiForms/apps/api
+@repo/api:build: > tsup
+@repo/api:build: 
+@repo/api:build: [34mCLI[39m Building entry: src/index.ts
+@repo/api:build: [34mCLI[39m Using tsconfig: tsconfig.json
+@repo/api:build: [34mCLI[39m tsup v8.5.1
+@repo/api:build: [34mCLI[39m Using tsup config: /Users/sudhiryadav/Web dev Cohort 2026/Hackathon/ChaiForms/apps/api/tsup.config.ts
+@repo/api:build: [34mCLI[39m Target: es2022
+@repo/api:build: [34mCLI[39m Cleaning output folder
+@repo/api:build: [34mCJS[39m Build start
+@repo/api:build: [32mCJS[39m [1mdist/index.js [22m[32m2.42 KB[39m
+@repo/api:build: [32mCJS[39m ⚡️ Build success in 5ms
+web:build: 
+web:build: > web@0.1.0 build /Users/sudhiryadav/Web dev Cohort 2026/Hackathon/ChaiForms/apps/web
+web:build: > next build
+web:build: 
+web:build: ▲ Next.js 16.1.0 (Turbopack)
+web:build: - Environments: .env.production, .env
+web:build: 
+web:build:   Creating an optimized production build ...
+web:build: ✓ Compiled successfully in 1586.7ms
+web:build:   Running TypeScript ...
+web:build:   Collecting page data using 9 workers ...
+web:build:   Generating static pages using 9 workers (0/13) ...
+web:build:   Generating static pages using 9 workers (3/13) 
+web:build:   Generating static pages using 9 workers (6/13) 
+web:build:   Generating static pages using 9 workers (9/13) 
+web:build: ✓ Generating static pages using 9 workers (13/13) in 136.8ms
+web:build:   Finalizing page optimization ...
+web:build: 
+web:build: Route (app)
+web:build: ┌ ○ /
+web:build: ├ ○ /_not-found
+web:build: ├ ƒ /api/logout
+web:build: ├ ○ /dashboard
+web:build: ├ ○ /dashboard/analytics
+web:build: ├ ○ /dashboard/forms
+web:build: ├ ƒ /dashboard/forms/[id]
+web:build: ├ ƒ /dashboard/forms/[id]/submissions
+web:build: ├ ○ /dashboard/responses
+web:build: ├ ○ /dashboard/settings
+web:build: ├ ○ /dashboard/templates
+web:build: ├ ƒ /form/[form_id]
+web:build: ├ ○ /login
+web:build: └ ○ /signup
+web:build: 
+web:build: 
+web:build: ○  (Static)   prerendered as static content
+web:build: ƒ  (Dynamic)  server-rendered on demand
+web:build: 
+
+ Tasks:    2 successful, 2 total
+Cached:    1 cached, 2 total
+  Time:    6.071s 
+

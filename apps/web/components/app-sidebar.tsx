@@ -39,7 +39,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     name: user?.fullName ?? "Product Owner",
     email: user?.email ?? "test@example.com",
     avatar: user?.profileImageUrl ?? "/avatars/user.svg",
-    details: user ? `User ID: ${user.id}` : "Signed in account details will appear here",
   };
 
   return (
