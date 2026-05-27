@@ -18,6 +18,8 @@ import {
   updateFieldOutputModel,
   createSubmissionInputModel,
   createSubmissionOutputModel,
+  getSubmissionsByFormIdInputModel,
+  getSubmissionsByFormIdOutputModel,
 } from "./model";
 
 const TAGS = ["Form"];
@@ -88,6 +90,26 @@ export const formRouter = router({
     .mutation(async ({ input }) => {
       const { id } = await formService.createSubmission(input);
       return { id };
+    }),
+  getSubmissionsByFormId: authenticatedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/getSubmissionsByFormId"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(getSubmissionsByFormIdInputModel)
+    .output(getSubmissionsByFormIdOutputModel)
+    .query(async ({ input }) => {
+      const submissions = await formService.getSubmissionsByFormId(input);
+
+      return submissions.map((submission) => ({
+        ...submission,
+        createdAt: submission.createdAt?.toISOString() ?? null,
+        updatedAt: submission.updatedAt?.toISOString() ?? null,
+      }));
     }),
   listForms: authenticatedProcedure
     .meta({

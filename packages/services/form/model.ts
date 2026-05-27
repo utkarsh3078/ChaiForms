@@ -64,3 +64,23 @@ export const createSubmissionInput = z.object({
   values: z.array(submissionValue).min(1).describe("Array of submitted field values"),
 });
 export type CreateSubmissionInputType = z.infer<typeof createSubmissionInput>;
+
+export const getSubmissionsByFormIdInput = z.object({
+  formId: z.string().uuid().describe("ID of the form whose submissions should be listed"),
+});
+export type GetSubmissionsByFormIdInputType = z.infer<typeof getSubmissionsByFormIdInput>;
+
+export const submissionRowValue = z.object({
+  formFieldId: z.string(),
+  value: z.string(),
+});
+
+export const getSubmissionsByFormIdOutput = z.array(
+  z.object({
+    id: z.string(),
+    formId: z.string(),
+    values: z.array(submissionRowValue),
+    createdAt: z.date().nullable(),
+    updatedAt: z.date().nullable(),
+  }),
+);

@@ -21,7 +21,9 @@ export type FormSubmissionValuesRow = FormSubmissionValue[];
 export const formSubmissionTable = pgTable("form_submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
 
-  formId: uuid("form_id").references(() => formsTable.id),
+  formId: uuid("form_id")
+    .notNull()
+    .references(() => formsTable.id),
 
   //We should use array of objects
   values: json("values").$type<FormSubmissionValuesRow>().notNull(),

@@ -105,3 +105,22 @@ export const createSubmissionInputModel = z.object({
 });
 
 export const createSubmissionOutputModel = z.object({ id: z.string() });
+
+export const getSubmissionsByFormIdInputModel = z.object({
+  formId: z.string().uuid(),
+});
+
+export const getSubmissionsByFormIdOutputModel = z.array(
+  z.object({
+    id: z.string(),
+    formId: z.string(),
+    values: z.array(
+      z.object({
+        formFieldId: z.string(),
+        value: z.string(),
+      }),
+    ),
+    createdAt: z.string().nullable(),
+    updatedAt: z.string().nullable(),
+  }),
+);

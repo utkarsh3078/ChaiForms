@@ -210,3 +210,28 @@ export const useGetFormById = (formId: string | undefined) => {
     status,
   };
 };
+
+export const useGetSubmissionsByFormId = (formId: string | undefined) => {
+  const {
+    data: submissions,
+    error,
+    isFetched,
+    isFetching,
+    isLoading,
+    status,
+  } = trpc.form.getSubmissionsByFormId.useQuery(
+    { formId: formId ?? "" },
+    {
+      enabled: Boolean(formId),
+    },
+  );
+
+  return {
+    submissions,
+    error,
+    isFetched,
+    isFetching,
+    isLoading,
+    status,
+  };
+};

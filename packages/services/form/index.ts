@@ -20,6 +20,8 @@ import {
   type GetFieldsInputType,
   createSubmissionInput,
   type CreateSubmissionInputType,
+  getSubmissionsByFormIdInput,
+  type GetSubmissionsByFormIdInputType,
 } from "./model";
 import type { InferModel } from "@repo/database";
 
@@ -233,6 +235,30 @@ class FormService {
       throw new Error("Failed to create submission");
 
     return { id: result[0].id };
+  }
+
+  public async getSubmissionsByFormId(payload: GetSubmissionsByFormIdInputType) {
+    const { formId } = await getSubmissionsByFormIdInput.parseAsync(payload);
+
+    const submissions = await db
+      .select({
+        id: formSubmissionTable.id,
+        formId: formSubmissionTable.formId,
+        values: formSubmissionTable.values,
+        createdAt: formSubmissionTable.createdAt,
+        updatedAt: formSubmissionTable.updatedAt,
+      })
+      .from(formSubmissionTable)
+      .where(eq(formSubmissionTable.formId, formId))
+      .orderBy(desc(formSubmissionTable.createdAt));
+
+    return submissions.map((submission) => ({
+      id: submission.id,
+      formId: submission.formId ?? formId,
+      values: submission.values,
+      createdAt: submission.createdAt,
+      updatedAt: submission.updatedAt,
+    }));
   }
 }
 
