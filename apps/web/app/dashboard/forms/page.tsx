@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
+import FormCard from "~/components/dashboard/FormCard";
 
 import { AppSidebar } from "~/components/app-sidebar";
 import { SiteHeader } from "~/components/site-header";
@@ -197,28 +197,11 @@ export default function FormsPage() {
                 {isFormsLoading ? (
                   <p className="text-sm text-muted-foreground">Loading forms...</p>
                 ) : forms && forms.length > 0 ? (
-                  <div className="grid gap-3">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {forms.map((form) => (
-                      <Card key={form.id} className="border-dashed">
-                        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-                          <div className="space-y-1">
-                            <h3 className="font-medium leading-none">{form.title}</h3>
-                            <p className="text-sm text-muted-foreground">
-                              {form.description ?? "No description provided"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Created{" "}
-                              {form.createdAt
-                                ? new Date(form.createdAt).toLocaleString()
-                                : "just now"}
-                            </p>
-                          </div>
-
-                          <Button asChild variant="outline">
-                            <Link href={`/dashboard/forms/${form.id}`}>See form</Link>
-                          </Button>
-                        </CardContent>
-                      </Card>
+                      <div key={form.id} className="flex justify-start">
+                        <FormCard form={form} />
+                      </div>
                     ))}
                   </div>
                 ) : (

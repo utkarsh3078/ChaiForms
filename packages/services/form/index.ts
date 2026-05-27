@@ -215,6 +215,21 @@ class FormService {
   public async createSubmission(payload: CreateSubmissionInputType) {
     const parsed = await createSubmissionInput.parseAsync(payload);
 
+    const formRows = await db
+      .select({
+        expiryTime: formsTable.expiryTime,
+      })
+      .from(formsTable)
+      .where(eq(formsTable.id, parsed.formId))
+      .limit(1);
+
+    const form = formRows[0];
+    if (!form) throw new Error("Form not found");
+
+    if (form.expiryTime.getTime() <= Date.now()) {
+      throw new Error("Time for filling is up. The form is closed.");
+    }
+
     const insertObj = {
       formId: parsed.formId,
       values: parsed.values,
