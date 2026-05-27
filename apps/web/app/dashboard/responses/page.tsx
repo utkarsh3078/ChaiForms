@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 
@@ -47,7 +47,7 @@ function formatSubmissionValue(value: string | undefined) {
   return value;
 }
 
-export default function ResponsesPage() {
+function ResponsesPageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -295,5 +295,30 @@ export default function ResponsesPage() {
         )}
       </div>
     </DashboardShell>
+  );
+}
+
+export default function ResponsesPage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardShell>
+          <TopNavbar />
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 lg:px-6">
+            <Skeleton className="h-12 w-64 rounded-xl" />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <Skeleton className="h-28 rounded-2xl" />
+              <Skeleton className="h-28 rounded-2xl" />
+              <Skeleton className="h-28 rounded-2xl" />
+              <Skeleton className="h-28 rounded-2xl" />
+            </div>
+            <Skeleton className="h-16 rounded-2xl" />
+            <Skeleton className="h-105 rounded-2xl" />
+          </div>
+        </DashboardShell>
+      }
+    >
+      <ResponsesPageContent />
+    </Suspense>
   );
 }
