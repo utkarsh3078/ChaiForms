@@ -28,7 +28,10 @@ export const signInUserWithEmailAndPasswordOutputModel = z.object({
 
 // Sign out user
 //Input
-export const signOutUserInputModel = z.undefined();
+// Not `z.undefined()`: this is a POST, and `express.json()` turns the tRPC client's
+// empty mutation body into `{}` before the procedure sees it, which `z.undefined()`
+// rejects with a 400 and leaves the session cookie in place.
+export const signOutUserInputModel = z.object({}).optional();
 //Output
 export const signOutUserOutputModel = z.object({
   success: z.boolean().describe("Whether the sign out request completed successfully"),

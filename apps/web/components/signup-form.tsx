@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { useForm } from "react-hook-form";
-import { trpc } from "~/trpc/client";
+import { useSignUp } from "~/hooks/api/auth";
 import { useRouter } from "next/navigation";
 
 type SignupFormValues = {
@@ -16,20 +16,36 @@ type SignupFormValues = {
 };
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const { mutateAsync: createUserWithEmailAndPasswordAsync } =
-    trpc.auth.createUserWithEmailAndPassword.useMutation();
-  const { register, handleSubmit } = useForm<SignupFormValues>();
+  const { createUserWithEmailAndPasswordAsync, error, status } = useSignUp();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<SignupFormValues>();
   const router = useRouter();
+
+  const isSubmitting = status === "pending";
 
   //handler function for form submission
   const onSubmit = async (values: SignupFormValues) => {
-    const { id } = await createUserWithEmailAndPasswordAsync({
-      email: values.email,
-      password: values.password,
-      fullName: values.name,
-    });
-    if (id) {
-      router.replace("/dashbooard");
+    if (values.password !== values.confirmPassword) {
+      setError("confirmPassword", { message: "Passwords do not match." });
+      return;
+    }
+
+    try {
+      const { id } = await createUserWithEmailAndPasswordAsync({
+        email: values.email,
+        password: values.password,
+        fullName: values.name,
+      });
+
+      if (id) {
+        router.replace("/login");
+      }
+    } catch {
+      // The failure is surfaced through the mutation's `error` below.
     }
   };
 
@@ -72,16 +88,29 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 required
                 {...register("confirmPassword")}
               />
-              <FieldDescription>Please confirm your password.</FieldDescription>
+              {errors.confirmPassword ? (
+                <FieldDescription className="text-destructive">
+                  {errors.confirmPassword.message}
+                </FieldDescription>
+              ) : (
+                <FieldDescription>Please confirm your password.</FieldDescription>
+              )}
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                {error ? (
+                  <p role="alert" className="text-sm text-destructive">
+                    {error.message}
+                  </p>
+                ) : null}
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating account..." : "Create Account"}
+                </Button>
                 <Button variant="outline" type="button">
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="#">Sign in</a>
+                  Already have an account? <a href="/login">Sign in</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

@@ -51,8 +51,14 @@ export function NavUser({
   const { signOutUserAsync } = useSignOut();
 
   const handleLogout = async () => {
-    await signOutUserAsync();
-    router.replace("/login");
+    try {
+      await signOutUserAsync();
+    } catch {
+      // Send the user to the login page even if the sign-out request failed,
+      // instead of silently leaving them on the page they clicked from.
+    } finally {
+      router.replace("/login");
+    }
   };
 
   return (

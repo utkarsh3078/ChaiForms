@@ -61,18 +61,22 @@ export const useSignIn = () => {
 
 export const useSignOut = () => {
   const utils = trpc.useUtils();
+  const {
+    mutateAsync: signOutUserMutationAsync,
+    error,
+    failureCount,
+    isError,
+    isIdle,
+    isSuccess,
+    status,
+  } = trpc.auth.signOutUser.useMutation();
 
+  // The authentication cookie is httpOnly and owned by the API origin, so only the
+  // API can clear it. A route handler on the web origin sets an unrelated cookie and
+  // leaves the session intact.
   const signOutUserAsync = async () => {
-    const response = await fetch("/api/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to sign out");
-    }
-
-    await utils.auth.getLoggedInUserInfo.invalidate();
+    await signOutUserMutationAsync(undefined);
+    await utils.auth.getLoggedInUserInfo.reset();
   };
 
   const signOutUser = () => {
@@ -82,12 +86,12 @@ export const useSignOut = () => {
   return {
     signOutUserAsync,
     signOutUser,
-    error: undefined,
-    failureCount: 0,
-    isError: false,
-    isIdle: true,
-    isSuccess: false,
-    status: "idle" as const,
+    error,
+    failureCount,
+    isError,
+    isIdle,
+    isSuccess,
+    status,
   };
 };
 
